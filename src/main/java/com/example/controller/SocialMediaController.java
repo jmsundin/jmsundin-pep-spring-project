@@ -72,6 +72,14 @@ public class SocialMediaController {
     public ResponseEntity<Message> getMessage(@PathVariable("message_id") int message_id) {
         return ResponseEntity.ok(messageService.getMessage(message_id));
     }
-    
+
+    @DeleteMapping("/messages/{message_id}")
+    public ResponseEntity<Object> deleteMessage(@PathVariable("message_id") Integer message_id) {
+        int rowsUpdated = messageService.deleteMessage(message_id);
+        if (rowsUpdated == 0) {
+            return ResponseEntity.ok().body(""); // Empty body for idempotency if the message does not exist
+        }
+        return ResponseEntity.ok().body(rowsUpdated); // Return the number of rows updated (1) if the message existed
+    }
 
 }
