@@ -24,6 +24,10 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
+    public Message getMessage(Integer message_id) {
+        return messageRepository.findById(message_id).orElse(null);
+    }
+
     private void validateMessage(Message message) {
         if (message.getPosted_by() == null || !accountRepository.findById(message.getPosted_by()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
