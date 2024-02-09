@@ -8,6 +8,7 @@ import com.example.entity.Message;
 import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 
+import java.util.List;
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
@@ -33,5 +34,9 @@ public class MessageService {
         if (message.getMessage_text().length() > 255) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Content cannot be more than 255 characters long");
         }
+    }
+
+    public List<Message> getAllMessages() {
+        return messageRepository.findAll();
     }
 }
