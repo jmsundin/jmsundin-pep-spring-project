@@ -18,6 +18,9 @@ import com.example.repository.AccountRepository;
 import com.example.entity.Message;
 import com.example.service.MessageService;
 import com.example.repository.MessageRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -58,6 +61,11 @@ public class SocialMediaController {
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatus()).body(null);
         }
+    }
+
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getAllMessages() {
+        return ResponseEntity.ok(messageService.getAllMessages());
     }
     
 
