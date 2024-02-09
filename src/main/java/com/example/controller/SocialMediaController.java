@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +28,21 @@ import com.example.repository.MessageRepository;
 @RestController
 public class SocialMediaController {
     AccountService accountService;
+    MessageService messageService;
 
-    public SocialMediaController(AccountRepository accountRepository) {
+    public SocialMediaController(AccountRepository accountRepository, MessageRepository messageRepository) {
         accountService = new AccountService(accountRepository);
+        messageService = new MessageService(messageRepository, accountRepository);
     }
     
     @PostMapping("/register")
     public ResponseEntity<Account> register(@RequestBody Account account) {
-        return ResponseEntity.ok(accountService.register(account));
+        try {
+            Account registeredAccount = accountService.register(account);
+            return ResponseEntity.ok(registeredAccount);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatus()).body(null);
+        }
     }
 
     @PostMapping("/login")
