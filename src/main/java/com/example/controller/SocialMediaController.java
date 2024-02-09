@@ -50,5 +50,15 @@ public class SocialMediaController {
         return ResponseEntity.ok(accountService.login(account));
     }
     
+    @PostMapping("/messages")
+    public ResponseEntity<Message> postMessage(@RequestBody Message message) {
+        try {
+            Message postedMessage = messageService.postMessage(message);
+            return ResponseEntity.ok(postedMessage);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatus()).body(null);
+        }
+    }
+    
 
 }
