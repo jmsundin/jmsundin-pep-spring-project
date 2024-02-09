@@ -28,6 +28,17 @@ public class AccountService {
         }
     }
 
+    public Account login(Account account) {
+        Account accountFromDatabase = accountRepository.findByUsername(account.getUsername());
+        if (accountFromDatabase == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Username does not exist");
+        }
+        if (!accountFromDatabase.getPassword().equals(account.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect password");
+        }
+        return accountFromDatabase;
+    }
+
     private void validate(Account account) {
         if (account.getUsername() == null || account.getUsername().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be blank");
