@@ -20,12 +20,24 @@ public class MessageService {
     }
 
     public Message postMessage(Message message) {
-        validateMessage(message);
+        validateMessageAuthorId(message);
         return messageRepository.save(message);
     }
 
     public Message getMessage(Integer message_id) {
         return messageRepository.findById(message_id).orElse(null);
+    }
+
+    public int editMessage(Integer message_id, Message message) {
+        Message messageFromDb = validateMessageId(message_id);
+        
+        validateMessageLength(message);
+
+        messageFromDb.setMessage_text(message.getMessage_text());
+        if (messageRepository.save(messageFromDb) == null) {
+            return 0;
+        }
+        return 1;
     }
 
     public int deleteMessage(Integer message_id) {
@@ -37,10 +49,21 @@ public class MessageService {
         return 0; // No rows updated if the message does not exist
     }
 
-    private void validateMessage(Message message) {
+    private void validateMessageAuthorId(Message message) {
         if (message.getPosted_by() == null || !accountRepository.findById(message.getPosted_by()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
         }
+    }
+
+    private Message validateMessageId(Integer message_id) {
+        Message messageFromDb = messageRepository.findById(message_id).orElse(null);
+        if (messageFromDb == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Message does not exist");
+        }
+        return messageFromDb;
+    }
+
+    private void validateMessageLength(Message message) {
         if (message.getMessage_text().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Content cannot be blank");
         }
