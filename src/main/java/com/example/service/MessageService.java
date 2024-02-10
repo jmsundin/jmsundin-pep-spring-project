@@ -50,6 +50,10 @@ public class MessageService {
         return 0; // No rows updated if the message does not exist
     }
 
+    public List<Message> findMessagesByAccountId(Integer account_id) {
+        return messageRepository.findMessagesByAccountId(account_id);
+    }
+
     private void validateMessageAuthorId(Message message) {
         if (message.getPosted_by() == null || !accountRepository.findById(message.getPosted_by()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
