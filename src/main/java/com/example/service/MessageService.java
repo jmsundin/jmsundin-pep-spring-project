@@ -21,6 +21,7 @@ public class MessageService {
 
     public Message postMessage(Message message) {
         validateMessageAuthorId(message);
+        validateMessageLength(message);
         return messageRepository.save(message);
     }
 
