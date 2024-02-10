@@ -82,4 +82,14 @@ public class SocialMediaController {
         return ResponseEntity.ok().body(rowsUpdated); // Return the number of rows updated (1) if the message existed
     }
 
+    @PatchMapping("/messages/{message_id}")
+    public ResponseEntity<Object> editMessage(@PathVariable("message_id") Integer message_id, @RequestBody Message message) {
+        try {
+            int rowsUpdated = messageService.editMessage(message_id, message);
+            return ResponseEntity.ok(rowsUpdated);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatus()).body(null);
+        }
+    }
+
 }
